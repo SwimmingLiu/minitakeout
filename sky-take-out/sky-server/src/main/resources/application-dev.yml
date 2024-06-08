@@ -6,3 +6,9 @@ sky:
     database: sky_take_out
     username: root
     password: root
+
+qiniuyun:
+    oss:
+      access-key: bjxv3VdZBTqbl-XFEc9_om74i1YlPSne9B_tRjBR
+      secret-key: fKYRONIda8SGaOLmKthzg1_cLeNYyWu04lt7diZu
+      bucket: swimmingliu

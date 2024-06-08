@@ -74,7 +74,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 
 
-    	/**
+    /**
      * 扩展Spring MVC框架的消息转化器
      * @param converters
      */
@@ -85,7 +85,10 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         //需要为消息转换器设置一个对象转换器，对象转换器可以将Java对象序列化为json数据
         converter.setObjectMapper(new JacksonObjectMapper());
         //将自己的消息转化器加入容器中
-        converters.add(0,converter);
+        converters.add(converters.size() - 1,converter);
+        // 注意这个地方如果用 index = 0， knief4j打不开
+        // https://gitcode.csdn.net/66276ac9a2b051225565e695.html
+//        converters.add(0,converter);
     }
 }
 

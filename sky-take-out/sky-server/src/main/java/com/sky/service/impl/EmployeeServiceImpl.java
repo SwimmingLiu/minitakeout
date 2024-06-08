@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -65,6 +64,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
     @Override
     public void addEmployee(EmployeeDTO employeeDTO) {
         // 创建员工对象
@@ -77,15 +80,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 对密码进行加密
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         // 2. 增加创建时间和更新时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
         // 3. TODO 设置当前记录创建人id和修改人id
-        employee.setCreateUser(BaseContext.getCurrentId());//目前写个假数据，后期修改
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateUser(BaseContext.getCurrentId());//目前写个假数据，后期修改
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         // 4. 调用Mapper
         employeeMapper.insertEmployee(employee);
     }
 
+    /**
+     * 分页查询员工信息
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         // 初始化分页查询结果
@@ -99,6 +107,49 @@ public class EmployeeServiceImpl implements EmployeeService {
         pageResult.setRecords(page.getResult());
         pageResult.setTotal(total);
         return pageResult;
+    }
+
+    /**
+     * 启用、禁用员工账号
+     * @param id
+     * @param status
+     */
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        // 修改员工账号状态
+        Employee employee = Employee.builder().
+                id(id).
+                status(status)
+                .build();
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据员工id查询员工信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee getEmployeeById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        return employee;
+    }
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void updateEmployee(EmployeeDTO employeeDTO) {
+        // 1. Copy EmpDTO ==> Emp对象
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        // 2. 修改更新时间
+//        employee.setUpdateTime(LocalDateTime.now());
+        // 3. 修改更新用户
+//        employee.setUpdateUser(BaseContext.getCurrentId());
+        // 4. 调用Mapper
+        employeeMapper.update(employee);
     }
 
 }
